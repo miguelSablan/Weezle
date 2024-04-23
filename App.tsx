@@ -1,20 +1,38 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, View, Text, SafeAreaView } from "react-native";
+import GuessRow from "./components/GuessRow";
+import Keyboard from "./components/Keyboard";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.text}>WEEZLE</Text>
+      <View>
+        <GuessRow />
+        <GuessRow />
+        <GuessRow />
+        <GuessRow />
+        <GuessRow />
+        <GuessRow />
+        <StatusBar style="auto" />
+      </View>
+      <Keyboard />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#189BCC",
+    color: "#fff",
+    alignItems: "center",
+    justifyContent: "space-evenly",
+  },
+  text: {
+    color: "#fff",
+    fontSize: 40,
+    fontWeight: "bold",
+    letterSpacing: 3,
   },
 });
