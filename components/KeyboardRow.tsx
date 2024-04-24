@@ -31,8 +31,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   keyLetter: {
-    fontWeight: "500",
-    fontSize: 15,
+    fontSize: 16,
+    fontFamily: "WeezerFont",
   },
 });
 

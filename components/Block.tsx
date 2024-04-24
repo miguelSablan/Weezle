@@ -24,8 +24,8 @@ const styles = StyleSheet.create({
   },
   guessLetter: {
     fontSize: 30,
-    fontWeight: "bold",
     color: "#fff",
+    fontFamily: "WeezerFont",
   },
 });
 
