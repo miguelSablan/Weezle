@@ -5,17 +5,24 @@ import Keyboard from "./components/Keyboard";
 import { useState } from "react";
 import { wordBank } from "./data/wordBank";
 import { useFonts } from "expo-font";
+import { IGuess, defaultGuess } from "./types/guessTypes";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
     WeezerFont: require("./assets/fonts/weezerfont.ttf"),
   });
   const [activeWord, setActiveWord] = useState(wordBank[0]);
-  const [guess, setGuess] = useState("");
+  const [guessIndex, setGuessIndex] = useState(0);
+  const [guesses, setGuesses] = useState<IGuess>(defaultGuess);
+  console.log(guesses);
 
   const handleKeyPress = (letter: string) => {
+    const guess: string = guesses[guessIndex];
+    console.log(guess);
+    console.log(guesses);
+
     if (letter == "ENTER") {
-      if (guess.length < 5) {
+      if (guess.length != 5) {
         alert("Word too short.");
         return;
       }
@@ -29,10 +36,16 @@ export default function App() {
         alert("You win!");
         return;
       }
+
+      if (guessIndex < 5) {
+        setGuessIndex(guessIndex + 1);
+      } else {
+        alert("You lose!");
+      }
     }
 
     if (letter == "DEL") {
-      setGuess(guess.slice(0, -1));
+      setGuesses({ ...guesses, [guessIndex]: guess.slice(0, -1) });
       return;
     }
 
@@ -41,7 +54,7 @@ export default function App() {
       return;
     }
 
-    setGuess(guess + letter);
+    setGuesses({ ...guesses, [guessIndex]: guess + letter });
   };
 
   if (!fontsLoaded) return undefined;
@@ -50,12 +63,12 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       <Text style={styles.text}>weezle</Text>
       <View>
-        <GuessRow guess={guess} />
-        <GuessRow guess="" />
-        <GuessRow guess="" />
-        <GuessRow guess="" />
-        <GuessRow guess="" />
-        <GuessRow guess="" />
+        <GuessRow guess={guesses[0]} />
+        <GuessRow guess={guesses[1]} />
+        <GuessRow guess={guesses[2]} />
+        <GuessRow guess={guesses[3]} />
+        <GuessRow guess={guesses[4]} />
+        <GuessRow guess={guesses[5]} />
         <StatusBar style="auto" />
       </View>
       <Keyboard onKeyPress={handleKeyPress} />
