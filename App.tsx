@@ -3,17 +3,28 @@ import { StyleSheet, View, Text, SafeAreaView } from "react-native";
 import GuessRow from "./components/GuessRow";
 import Keyboard from "./components/Keyboard";
 import { useState } from "react";
+import { wordBank } from "./data/wordBank";
 
 export default function App() {
+  const [activeWord, setActiveWord] = useState(wordBank[0]);
   const [guess, setGuess] = useState("");
 
   const handleKeyPress = (letter: string) => {
     if (letter == "ENTER") {
       if (guess.length < 5) {
+        alert("Word too short.");
         return;
       }
 
-      return;
+      if (!wordBank.includes(guess)) {
+        alert("Not a valid word.");
+        return;
+      }
+
+      if (guess == activeWord) {
+        alert("You win!");
+        return;
+      }
     }
 
     if (letter == "DEL") {
