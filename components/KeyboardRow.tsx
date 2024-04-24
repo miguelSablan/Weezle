@@ -3,12 +3,13 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 interface KeyboardRowProps {
   letters: string[];
+  onKeyPress: (letter: string) => void;
 }
 
-const KeyboardRow = ({ letters }: KeyboardRowProps) => (
+const KeyboardRow = ({ letters, onKeyPress }: KeyboardRowProps) => (
   <View style={styles.keyboardRow}>
     {letters.map((letter, index) => (
-      <TouchableOpacity key={index}>
+      <TouchableOpacity key={index} onPress={() => onKeyPress(letter)}>
         <View style={styles.key}>
           <Text style={styles.keyLetter}>{letter}</Text>
         </View>
