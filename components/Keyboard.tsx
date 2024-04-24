@@ -1,7 +1,11 @@
 import KeyboardRow from "./KeyboardRow";
 import { View, StyleSheet } from "react-native";
 
-const Keyboard = ({ onKeyPress }: { onKeyPress: (letter: string) => void }) => {
+interface KeyboardProps {
+  onKeyPress: (letter: string) => void;
+}
+
+const Keyboard = ({ onKeyPress }: KeyboardProps) => {
   const row1 = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"];
   const row2 = ["A", "S", "D", "F", "G", "H", "J", "K", "L"];
   const row3 = ["ENTER", "Z", "X", "C", "V", "B", "N", "M", "DEL"];
