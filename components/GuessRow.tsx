@@ -2,16 +2,20 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import Block from "./Block";
 
-const GuessRow = ({ guess }: { guess: string }) => {
-  const letters = guess.split("");
+interface GuessRowProps {
+  guess: string;
+  word: string;
+  guessed: boolean;
+}
 
+const GuessRow = ({ guess, word, guessed }: GuessRowProps) => {
   return (
     <View style={styles.guessRow}>
-      <Block letter={letters[0]} />
-      <Block letter={letters[1]} />
-      <Block letter={letters[2]} />
-      <Block letter={letters[3]} />
-      <Block letter={letters[4]} />
+      <Block index={0} guess={guess} word={word} guessed={guessed} />
+      <Block index={1} guess={guess} word={word} guessed={guessed} />
+      <Block index={2} guess={guess} word={word} guessed={guessed} />
+      <Block index={3} guess={guess} word={word} guessed={guessed} />
+      <Block index={4} guess={guess} word={word} guessed={guessed} />
     </View>
   );
 };

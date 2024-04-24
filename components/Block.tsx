@@ -2,14 +2,36 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
 interface BlockProps {
-  letter: string;
+  index: number;
+  guess: string;
+  word: string;
+  guessed: boolean;
 }
 
-const Block = ({ letter }: BlockProps) => (
-  <View style={styles.guessSquare}>
-    <Text style={styles.guessLetter}>{letter}</Text>
-  </View>
-);
+const Block = ({ index, guess, word, guessed }: BlockProps) => {
+  const letter = guess[index];
+  const wordLetter = word[index];
+
+  const blockStyles: any[] = [styles.guessSquare];
+  const textStyles: any[] = [styles.guessLetter];
+
+  if (letter === wordLetter && guessed) {
+    blockStyles.push(styles.guessCorrect);
+    textStyles.push(styles.guessedLetter);
+  } else if (word.includes(letter) && guessed) {
+    blockStyles.push(styles.guessInWord);
+    textStyles.push(styles.guessedLetter);
+  } else if (guessed) {
+    blockStyles.push(styles.guessNotInWord);
+    textStyles.push(styles.guessedLetter);
+  }
+
+  return (
+    <View style={blockStyles}>
+      <Text style={textStyles}>{letter}</Text>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   guessSquare: {
@@ -26,6 +48,21 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: "#fff",
     fontFamily: "WeezerFont",
+  },
+  guessedLetter: {
+    color: "#fff",
+  },
+  guessCorrect: {
+    backgroundColor: "#b1d244",
+    borderColor: "#b1d244",
+  },
+  guessInWord: {
+    backgroundColor: "#c9b458",
+    borderColor: "#c9b458",
+  },
+  guessNotInWord: {
+    backgroundColor: "#787c7e",
+    borderColor: "#787c7e",
   },
 });
 

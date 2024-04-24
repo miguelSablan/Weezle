@@ -63,12 +63,36 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       <Text style={styles.text}>weezle</Text>
       <View>
-        <GuessRow guess={guesses[0]} />
-        <GuessRow guess={guesses[1]} />
-        <GuessRow guess={guesses[2]} />
-        <GuessRow guess={guesses[3]} />
-        <GuessRow guess={guesses[4]} />
-        <GuessRow guess={guesses[5]} />
+        <GuessRow
+          guess={guesses[0]}
+          word={activeWord}
+          guessed={guessIndex > 0}
+        />
+        <GuessRow
+          guess={guesses[1]}
+          word={activeWord}
+          guessed={guessIndex > 1}
+        />
+        <GuessRow
+          guess={guesses[2]}
+          word={activeWord}
+          guessed={guessIndex > 2}
+        />
+        <GuessRow
+          guess={guesses[3]}
+          word={activeWord}
+          guessed={guessIndex > 3}
+        />
+        <GuessRow
+          guess={guesses[4]}
+          word={activeWord}
+          guessed={guessIndex > 4}
+        />
+        <GuessRow
+          guess={guesses[5]}
+          word={activeWord}
+          guessed={guessIndex > 5}
+        />
         <StatusBar style="auto" />
       </View>
       <Keyboard onKeyPress={handleKeyPress} />
