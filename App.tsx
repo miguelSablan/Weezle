@@ -42,6 +42,7 @@ export default function App() {
       if (guessIndex < 5) {
         setGuessIndex(guessIndex + 1);
       } else {
+        setGuessIndex(guessIndex + 1);
         setGameComplete(true);
         alert("Say it ain't so. The word was " + activeWord);
       }
@@ -105,7 +106,7 @@ export default function App() {
           word={activeWord}
           guessed={guessIndex > 5}
         />
-        <StatusBar style="auto" />
+        <StatusBar style="light" />
       </View>
       <Keyboard onKeyPress={handleKeyPress} />
       {gameComplete && (

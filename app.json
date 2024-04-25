@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "Weezle",
+    "description": "A clone of the Wordle game, built on React Native for web and mobile",
     "slug": "Weezle",
     "version": "1.0.0",
     "orientation": "portrait",
