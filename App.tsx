@@ -1,9 +1,10 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, Text, SafeAreaView } from "react-native";
+import { StyleSheet, View, Text, SafeAreaView, Button } from "react-native";
 import GuessRow from "./components/GuessRow";
 import Keyboard from "./components/Keyboard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { wordBank } from "./data/wordBank";
+import { words } from "./data/words";
 import { useFonts } from "expo-font";
 import { IGuess, defaultGuess } from "./types/guessTypes";
 
@@ -14,12 +15,10 @@ export default function App() {
   const [activeWord, setActiveWord] = useState(wordBank[0]);
   const [guessIndex, setGuessIndex] = useState(0);
   const [guesses, setGuesses] = useState<IGuess>(defaultGuess);
-  console.log(guesses);
+  const [gameComplete, setGameComplete] = useState(false);
 
   const handleKeyPress = (letter: string) => {
     const guess: string = guesses[guessIndex];
-    console.log(guess);
-    console.log(guesses);
 
     if (letter == "ENTER") {
       if (guess.length != 5) {
@@ -27,20 +26,24 @@ export default function App() {
         return;
       }
 
-      if (!wordBank.includes(guess)) {
+      // Check if guess is a valid word from the word list
+      if (!wordBank.includes(guess) && !words.includes(guess)) {
         alert("Not a valid word.");
         return;
       }
 
       if (guess == activeWord) {
-        alert("You win!");
+        setGuessIndex(guessIndex + 1);
+        setGameComplete(true);
+        alert("Correctly Guessed!");
         return;
       }
 
       if (guessIndex < 5) {
         setGuessIndex(guessIndex + 1);
       } else {
-        alert("You lose!");
+        setGameComplete(true);
+        alert("Say it ain't so. The word was " + activeWord);
       }
     }
 
@@ -56,6 +59,15 @@ export default function App() {
 
     setGuesses({ ...guesses, [guessIndex]: guess + letter });
   };
+
+  useEffect(() => {
+    // reset everything
+    if (!gameComplete) {
+      setActiveWord(wordBank[Math.floor(Math.random() * wordBank.length)]);
+      setGuesses(defaultGuess);
+      setGuessIndex(0);
+    }
+  }, [gameComplete]);
 
   if (!fontsLoaded) return undefined;
 
@@ -96,6 +108,21 @@ export default function App() {
         <StatusBar style="auto" />
       </View>
       <Keyboard onKeyPress={handleKeyPress} />
+      {gameComplete && (
+        <View style={styles.gameCompleteWrapper}>
+          <Text>
+            <Text style={styles.bold}>Correct Word:</Text> {activeWord}
+          </Text>
+          <View>
+            <Button
+              title="Reset"
+              onPress={() => {
+                setGameComplete(false);
+              }}
+            />
+          </View>
+        </View>
+      )}
     </SafeAreaView>
   );
 }
@@ -113,5 +140,11 @@ const styles = StyleSheet.create({
     fontSize: 40,
     letterSpacing: 3,
     fontFamily: "WeezerFont",
+  },
+  gameCompleteWrapper: {
+    alignItems: "center",
+  },
+  bold: {
+    fontWeight: "bold",
   },
 });
