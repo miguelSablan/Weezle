@@ -1,5 +1,12 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, Text, SafeAreaView, Button } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  SafeAreaView,
+  Button,
+  Platform,
+} from "react-native";
 import GuessRow from "./components/GuessRow";
 import Keyboard from "./components/Keyboard";
 import { useEffect, useState } from "react";
@@ -69,6 +76,27 @@ export default function App() {
       setGuessIndex(0);
     }
   }, [gameComplete]);
+
+  useEffect(() => {
+    // Enable keyboard input for web browsers
+    if (Platform.OS === "web") {
+      const handleKeyDown = (event: KeyboardEvent) => {
+        const { key } = event;
+
+        if (/^[A-Z]$/.test(key.toUpperCase())) {
+          handleKeyPress(key.toUpperCase());
+        } else if (key === "Enter") {
+          handleKeyPress("ENTER");
+        } else if (key === "Backspace") {
+          handleKeyPress("DEL");
+        }
+      };
+
+      window.addEventListener("keydown", handleKeyDown);
+
+      return () => window.removeEventListener("keydown", handleKeyDown);
+    }
+  }, [handleKeyPress]);
 
   if (!fontsLoaded) return undefined;
 
