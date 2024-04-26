@@ -23,6 +23,11 @@ export default function App() {
   const [guessIndex, setGuessIndex] = useState(0);
   const [guesses, setGuesses] = useState<IGuess>(defaultGuess);
   const [gameComplete, setGameComplete] = useState(false);
+  const [accuracy, setAccuracy] = useState<{[key: string]: "correct" | "close" | "notFound"}>({});
+  const [correctGuesses, setCorrectGuesses] = useState<string[]>([]);
+
+  console.log(activeWord);
+  console.log(guesses[guessIndex]);
 
   const handleKeyPress = (letter: string) => {
     const guess: string = guesses[guessIndex];
@@ -38,6 +43,29 @@ export default function App() {
         alert("Not a valid word.");
         return;
       }
+
+      const newAccuracy = { ...accuracy };
+      const wordLetters = activeWord.split("");
+
+      for (let i = 0; i < guess.length; i++) {
+        const guessedLetter = guess[i];
+        const correctLetter = wordLetters[i];
+
+        if (guessedLetter === correctLetter) {
+          if (!correctGuesses.includes(guessedLetter)) {
+            newAccuracy[guessedLetter] = "correct";
+            setCorrectGuesses([...correctGuesses, guessedLetter]);
+          } else {
+            newAccuracy[guessedLetter] = "correct";
+          }
+        } else if (wordLetters.includes(guessedLetter)) {
+          newAccuracy[guessedLetter] = "close";
+        } else {
+          newAccuracy[guessedLetter] = "notFound";
+        }
+      }
+
+      setAccuracy(newAccuracy);
 
       if (guess == activeWord) {
         setGuessIndex(guessIndex + 1);
@@ -74,6 +102,8 @@ export default function App() {
       setActiveWord(wordBank[Math.floor(Math.random() * wordBank.length)]);
       setGuesses(defaultGuess);
       setGuessIndex(0);
+      setAccuracy({});
+      setCorrectGuesses([]);
     }
   }, [gameComplete]);
 
@@ -136,7 +166,7 @@ export default function App() {
         />
         <StatusBar style="light" />
       </View>
-      <Keyboard onKeyPress={handleKeyPress} />
+      <Keyboard onKeyPress={handleKeyPress} accuracy={accuracy} />
       {gameComplete && (
         <View style={styles.gameCompleteWrapper}>
           <Text>
