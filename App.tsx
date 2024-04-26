@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   Button,
   Platform,
+  Modal,
 } from "react-native";
 import GuessRow from "./components/GuessRow";
 import Keyboard from "./components/Keyboard";
@@ -23,6 +24,7 @@ export default function App() {
   const [guessIndex, setGuessIndex] = useState(0);
   const [guesses, setGuesses] = useState<IGuess>(defaultGuess);
   const [gameComplete, setGameComplete] = useState(false);
+  const [gameMessage, setGameMessage] = useState("");
   const [accuracy, setAccuracy] = useState<{[key: string]: "correct" | "close" | "notFound"}>({});
   const [correctGuesses, setCorrectGuesses] = useState<string[]>([]);
 
@@ -70,7 +72,7 @@ export default function App() {
       if (guess == activeWord) {
         setGuessIndex(guessIndex + 1);
         setGameComplete(true);
-        alert("Correctly Guessed!");
+        setGameMessage("Correct!");
         return;
       }
 
@@ -79,7 +81,7 @@ export default function App() {
       } else {
         setGuessIndex(guessIndex + 1);
         setGameComplete(true);
-        alert("Say it ain't so. The word was " + activeWord);
+        setGameMessage("Say it ain't so...");
       }
     }
 
@@ -167,21 +169,31 @@ export default function App() {
         <StatusBar style="light" />
       </View>
       <Keyboard onKeyPress={handleKeyPress} accuracy={accuracy} />
-      {gameComplete && (
-        <View style={styles.gameCompleteWrapper}>
-          <Text>
-            <Text style={styles.bold}>Correct Word:</Text> {activeWord}
-          </Text>
-          <View>
-            <Button
-              title="Reset"
-              onPress={() => {
-                setGameComplete(false);
-              }}
-            />
+      <Modal
+        visible={gameComplete}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => setGameComplete(false)}
+      >
+        {gameComplete && (
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>{gameMessage}</Text>
+              <Text>
+                <Text style={styles.modalText}>Correct Word:</Text> {activeWord}
+              </Text>
+              <View style={styles.buttonContainer}>
+                <Button
+                  title="New Game"
+                  onPress={() => {
+                    setGameComplete(false);
+                  }}
+                />
+              </View>
+            </View>
           </View>
-        </View>
-      )}
+        )}
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -203,7 +215,27 @@ const styles = StyleSheet.create({
   gameCompleteWrapper: {
     alignItems: "center",
   },
-  bold: {
-    fontWeight: "bold",
+  modalText: {
+    fontSize: 15,
+    fontFamily: "WeezerFont",
+  },
+  modalTitle: {
+    fontSize: 30,
+    fontFamily: "WeezerFont",
+  },
+  buttonContainer: {
+    marginTop: 10,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: "#fff",
+    padding: 70,
+    borderRadius: 15,
+    alignItems: "center",
   },
 });
