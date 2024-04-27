@@ -8,22 +8,56 @@ interface BlockProps {
   guessed: boolean;
 }
 
+interface BlockStyles {
+  [key: string]: any;
+}
+
 const Block = ({ index, guess, word, guessed }: BlockProps) => {
   const letter = guess[index];
   const wordLetter = word[index];
 
-  const blockStyles: any[] = [styles.guessSquare];
+  const blockStyles: BlockStyles = { ...styles.guessSquare };
   const textStyles: any[] = [styles.guessLetter];
 
-  if (letter === wordLetter && guessed) {
-    blockStyles.push(styles.guessCorrect);
-    textStyles.push(styles.guessedLetter);
-  } else if (word.includes(letter) && guessed) {
-    blockStyles.push(styles.guessInWord);
-    textStyles.push(styles.guessedLetter);
-  } else if (guessed) {
-    blockStyles.push(styles.guessNotInWord);
-    textStyles.push(styles.guessedLetter);
+  const compareGuessAndCorrect = (guess: string, correct: string) => {
+    const output: string[] = [];
+    const correctIndices = new Set<number>();
+    const correctLetters = new Set<string>();
+
+    for (let i = 0; i < correct.length; i++) {
+      if (guess[i] === correct[i]) {
+        correctIndices.add(i);
+        correctLetters.add(correct[i]);
+      }
+    }
+
+    for (let i = 0; i < guess.length; i++) {
+      const g = guess[i];
+      if (correct.includes(g) && !correctIndices.has(i)) {
+        if (!correctLetters.has(g)) {
+          output.push('guessInWord');
+          correctLetters.add(g);
+        } else {
+          output.push('guessNotInWord');
+        }
+      } else if (correctIndices.has(i)) {
+        output.push('guessCorrect');
+      } else {
+        output.push('guessNotInWord');
+      }
+    }
+
+    return output;
+  };
+
+  if (guessed) {
+    const outputStyles = compareGuessAndCorrect(guess, word);
+
+    if (letter === wordLetter) {
+      Object.assign(blockStyles, styles.guessCorrect);
+    } else {
+      Object.assign(blockStyles, styles[outputStyles[index]]);
+    }
   }
 
   return (
@@ -33,7 +67,7 @@ const Block = ({ index, guess, word, guessed }: BlockProps) => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles: { [key: string]: any } = StyleSheet.create({
   guessSquare: {
     borderColor: "#d3d6da",
     borderWidth: 2,
@@ -48,9 +82,6 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: "#fff",
     fontFamily: "WeezerFont",
-  },
-  guessedLetter: {
-    color: "#fff",
   },
   guessCorrect: {
     backgroundColor: "#b1d244",
