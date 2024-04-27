@@ -28,9 +28,6 @@ export default function App() {
   const [accuracy, setAccuracy] = useState<{[key: string]: "correct" | "close" | "notFound"}>({});
   const [correctGuesses, setCorrectGuesses] = useState<string[]>([]);
 
-  console.log(activeWord);
-  console.log(guesses[guessIndex]);
-
   const handleKeyPress = (letter: string) => {
     const guess: string = guesses[guessIndex];
 
@@ -61,7 +58,9 @@ export default function App() {
             newAccuracy[guessedLetter] = "correct";
           }
         } else if (wordLetters.includes(guessedLetter)) {
-          newAccuracy[guessedLetter] = "close";
+          if (guess.indexOf(guessedLetter) === i) {
+            newAccuracy[guessedLetter] = "close";
+          } 
         } else {
           newAccuracy[guessedLetter] = "notFound";
         }
