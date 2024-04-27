@@ -25,14 +25,14 @@ const styles = StyleSheet.create({
   keyboardRow: {
     flexDirection: "row",
     justifyContent: "center",
-    marginBottom: 8,
+    marginBottom: 4,
   },
   key: {
     backgroundColor: "#d3d6da",
     padding: 10,
-    margin: 3,
+    marginHorizontal: 2,
     borderRadius: 5,
-    fontSize: 16,
+    fontSize: 18,
     fontFamily: "WeezerFont",
   },
   correct: {
