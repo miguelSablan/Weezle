@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Text, Animated, Easing, StyleSheet } from "react-native";
 
 interface BlockProps {
   index: number; // The index of the letter in the guess
@@ -13,11 +13,38 @@ interface BlockStyles {
 }
 
 const Block = ({ index, guess, word, guessed }: BlockProps) => {
+  const [animatedValue] = useState(new Animated.Value(0));
+  const [hasShaken, setHasShaken] = useState(false);
+  const shakeDuration = 100;
   const letter = guess[index]; // Get the current letter from the guess
   const wordLetter = word[index]; // Get the corresponding letter from the correct word
-
   const blockStyles: BlockStyles = { ...styles.guessSquare };
   const textStyles: any[] = [styles.guessLetter];
+
+  // Shake Animation Function
+  const shakeAnimation = () => {
+    Animated.sequence([
+      Animated.timing(animatedValue, { toValue: -10, duration: shakeDuration, easing: Easing.linear, useNativeDriver: true }),
+      Animated.timing(animatedValue, { toValue: 10, duration: shakeDuration, easing: Easing.linear, useNativeDriver: true }),
+      Animated.timing(animatedValue, { toValue: 0, duration: shakeDuration, easing: Easing.linear, useNativeDriver: true }),
+    ]).start(() => {
+      setHasShaken(true); // Set hasShaken to true after the animation finishes
+    });
+  };
+
+  useEffect(() => {
+    if (guessed && !hasShaken) {
+      const delay = index * 200; // delay duration
+      setTimeout(() => {
+        shakeAnimation();
+      }, delay);
+    }
+  }, [guessed, hasShaken, index, shakeAnimation]);
+
+  useEffect(() => {
+    // Reset hasShaken when a new game starts
+    setHasShaken(false);
+  }, [guessed]);
 
   const compareGuessAndCorrect = (guess: string, correct: string) => {
     const output: string[] = []; // stores the output styles
@@ -75,6 +102,7 @@ const Block = ({ index, guess, word, guessed }: BlockProps) => {
     return output;
   };
 
+  // Apply styles based on guess result
   if (guessed) {
     const outputStyles = compareGuessAndCorrect(guess, word);
 
@@ -85,10 +113,15 @@ const Block = ({ index, guess, word, guessed }: BlockProps) => {
     }
   }
 
+  // for shake animation
+  const animatedStyle = {
+    transform: [{ translateY: animatedValue }],
+  };
+
   return (
-    <View style={blockStyles}>
+    <Animated.View style={[blockStyles, animatedStyle]}>
       <Text style={textStyles}>{letter}</Text>
-    </View>
+    </Animated.View>
   );
 };
 
