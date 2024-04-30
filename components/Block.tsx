@@ -34,7 +34,7 @@ const Block = ({ index, guess, word, guessed }: BlockProps) => {
 
   useEffect(() => {
     if (guessed && !hasShaken) {
-      const delay = index * 200; // delay duration
+      const delay = index * 50; // delay duration
       setTimeout(() => {
         shakeAnimation();
       }, delay);

@@ -18,14 +18,23 @@ export default function GameScreen({ wordBank }: GameScreenProps) {
   const [gameMessage, setGameMessage] = useState("");
   const [accuracy, setAccuracy] = useState<{[key: string]: "correct" | "close" | "notFound"}>({});
   const [correctGuesses, setCorrectGuesses] = useState<string[]>([]);
+  const [cooldown, setCooldown] = useState(false);
 
   const handleKeyPress = (letter: string) => {
     const guess: string = guesses[guessIndex];
 
+    // Typing cooldown after submitting guess
+    if (cooldown) return;
+
     // Prevent typing after round is over
-    if (gameComplete) return
+    if (gameComplete) return;
 
     if (letter == "ENTER") {
+      setCooldown(true);
+      setTimeout(() => {
+        setCooldown(false);
+      }, 600);
+
       if (guess.length != 5) {
         alert("Word too short.");
         return;
