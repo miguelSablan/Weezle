@@ -18,21 +18,14 @@ export default function GameScreen({ wordBank }: GameScreenProps) {
   const [gameMessage, setGameMessage] = useState("");
   const [accuracy, setAccuracy] = useState<{[key: string]: "correct" | "close" | "notFound"}>({});
   const [correctGuesses, setCorrectGuesses] = useState<string[]>([]);
-  const [cooldown, setCooldown] = useState(false);
 
   const handleKeyPress = (letter: string) => {
     const guess: string = guesses[guessIndex];
 
+    // Prevent typing after round is over
+    if (gameComplete) return
+
     if (letter == "ENTER") {
-      if (cooldown) {
-        return;
-      }
-
-      setCooldown(true); 
-      setTimeout(() => {
-        setCooldown(false); // Reset cooldown after 1 second
-      }, 1000);
-
       if (guess.length != 5) {
         alert("Word too short.");
         return;
@@ -178,11 +171,11 @@ export default function GameScreen({ wordBank }: GameScreenProps) {
             <View style={styles.modalContent}>
               <Text style={styles.modalTitle}>{gameMessage}</Text>
               <Text>
-                <Text style={styles.modalText}>Correct Word:</Text> {activeWord}
+                <Text style={styles.modalText}>The word was:</Text> {activeWord}
               </Text>
               <View style={styles.buttonContainer}>
                 <Button
-                  title="New Game"
+                  title="Play Again"
                   onPress={() => {
                     setGameComplete(false);
                   }}
