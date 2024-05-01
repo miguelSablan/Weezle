@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View, Text, Button, Platform, Modal } from "react-native";
-import GuessRow from "./GuessRow";
-import Keyboard from "./Keyboard";
+import GuessRow from "../components/GuessRow";
+import Keyboard from "../components/Keyboard";
 import { useEffect, useState } from "react";
 import { words } from "../data/words";
 import { IGuess, defaultGuess } from "../types/guessTypes";
@@ -16,7 +16,9 @@ export default function GameScreen({ wordBank }: GameScreenProps) {
   const [guesses, setGuesses] = useState<IGuess>(defaultGuess);
   const [gameComplete, setGameComplete] = useState(false);
   const [gameMessage, setGameMessage] = useState("");
-  const [accuracy, setAccuracy] = useState<{[key: string]: "correct" | "close" | "notFound"}>({});
+  const [accuracy, setAccuracy] = useState<{
+    [key: string]: "correct" | "close" | "notFound";
+  }>({});
   const [correctGuesses, setCorrectGuesses] = useState<string[]>([]);
   const [cooldown, setCooldown] = useState(false);
 

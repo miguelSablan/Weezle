@@ -1,8 +1,8 @@
-import GameScreen from "./components/GameScreen";
+import GameScreen from "./src/screens/GameScreen";
 import { useFonts } from "expo-font";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, SafeAreaView } from "react-native";
-import { wordBank } from "./data/wordBank";
+import { wordBank } from "./src/data/wordBank";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
