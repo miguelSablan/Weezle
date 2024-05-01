@@ -31,9 +31,12 @@ export default function GameScreen({ wordBank }: GameScreenProps) {
 
     if (letter == "ENTER") {
       setCooldown(true);
-      setTimeout(() => {
-        setCooldown(false);
-      }, 600);
+      setTimeout(
+        () => {
+          setCooldown(false);
+        },
+        Platform.OS === "web" ? 600 : 700 // delay messes up shake animation on mobile for some reason
+      );
 
       if (guess.length != 5) {
         alert("Word too short.");
@@ -134,7 +137,7 @@ export default function GameScreen({ wordBank }: GameScreenProps) {
 
   return (
     <>
-      <Text style={styles.text}>weezle</Text>
+      <Text style={styles.title}>weezle</Text>
       <View>
         <GuessRow
           guess={guesses[0]}
@@ -199,7 +202,7 @@ export default function GameScreen({ wordBank }: GameScreenProps) {
 }
 
 const styles = StyleSheet.create({
-  text: {
+  title: {
     color: "#fff",
     fontSize: 40,
     letterSpacing: 3,
@@ -210,7 +213,7 @@ const styles = StyleSheet.create({
     fontFamily: "WeezerFont",
   },
   modalTitle: {
-    fontSize: 30,
+    fontSize: 25,
     fontFamily: "WeezerFont",
   },
   buttonContainer: {
