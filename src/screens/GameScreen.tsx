@@ -13,14 +13,16 @@ import Keyboard from "../components/Keyboard";
 import { useEffect, useState } from "react";
 import { words } from "../data/words";
 import { IGuess, defaultGuess } from "../types/guessTypes";
+import { wordBank } from "../data/wordBank";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getWordleEmoji } from "../utils/getWordleEmoji";
 
 interface GameScreenProps {
-  wordBank: string[];
+  dailyWord: string;
 }
 
-export default function GameScreen({ wordBank }: GameScreenProps) {
-  const [activeWord, setActiveWord] = useState(wordBank[0]);
+export default function GameScreen({ dailyWord }: GameScreenProps) {
+  const [activeWord, setActiveWord] = useState(dailyWord);
   const [guessIndex, setGuessIndex] = useState(0);
   const [guesses, setGuesses] = useState<IGuess>(defaultGuess);
   const [gameComplete, setGameComplete] = useState(false);
@@ -126,9 +128,35 @@ export default function GameScreen({ wordBank }: GameScreenProps) {
   };
 
   useEffect(() => {
+    // Reset game state when daily word changes
+    setActiveWord(dailyWord);
+    setGuessIndex(0);
+    setGuesses(defaultGuess);
+    setGameComplete(false);
+    setAccuracy({});
+    setCorrectGuesses([]);
+    setWordleEmoji("");
+  }, [dailyWord]);
+
+  useEffect(() => {
+    // Reset daily word at midnight
+    const midnight = new Date();
+    midnight.setHours(24, 0, 0, 0);
+
+    const timer = setTimeout(() => {
+      // Reset daily word and update AsyncStorage or LocalStorage
+      const newDailyWord =
+        wordBank[Math.floor(Math.random() * wordBank.length)];
+      setActiveWord(newDailyWord);
+      AsyncStorage.setItem("dailyWord", newDailyWord);
+    }, midnight.getTime() - Date.now());
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
     // reset everything
     if (!gameComplete) {
-      setActiveWord(wordBank[Math.floor(Math.random() * wordBank.length)]);
       setGuesses(defaultGuess);
       setGuessIndex(0);
       setAccuracy({});
@@ -255,7 +283,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
-    backgroundColor: "#fff",
+    backgroundColor: "#008FC4",
     padding: 70,
     borderRadius: 15,
     alignItems: "center",
