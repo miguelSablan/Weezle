@@ -17,10 +17,10 @@ export const getWordleEmoji = (word: string, guessList: string[]): string => {
           line += "🟨"; // Yellow for correct letters in the wrong position
           break;
         case "guessNotInWord":
-          line += "⬜"; // Gray for incorrect letters
+          line += "⬛️"; // Gray for incorrect letters
           break;
         default:
-          line += "⬜"; // Gray for any other case
+          line += "⬛️"; // Gray for any other case
           break;
       }
     }

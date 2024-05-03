@@ -1,10 +1,19 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, Text, Button, Platform, Modal } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Button,
+  Platform,
+  Modal,
+  Clipboard,
+} from "react-native";
 import GuessRow from "../components/GuessRow";
 import Keyboard from "../components/Keyboard";
 import { useEffect, useState } from "react";
 import { words } from "../data/words";
 import { IGuess, defaultGuess } from "../types/guessTypes";
+import { getWordleEmoji } from "../utils/getWordleEmoji";
 
 interface GameScreenProps {
   wordBank: string[];
@@ -21,6 +30,7 @@ export default function GameScreen({ wordBank }: GameScreenProps) {
   }>({});
   const [correctGuesses, setCorrectGuesses] = useState<string[]>([]);
   const [cooldown, setCooldown] = useState(false);
+  const [wordleEmoji, setWordleEmoji] = useState("");
 
   const handleKeyPress = (letter: string) => {
     const guess: string = guesses[guessIndex];
@@ -80,6 +90,11 @@ export default function GameScreen({ wordBank }: GameScreenProps) {
         setGuessIndex(guessIndex + 1);
         setGameComplete(true);
         setGameMessage("Correct!");
+        const wordleScore = getWordleEmoji(
+          activeWord,
+          Object.values(guesses).filter(Boolean)
+        );
+        setWordleEmoji(wordleScore);
         return;
       }
 
@@ -89,6 +104,11 @@ export default function GameScreen({ wordBank }: GameScreenProps) {
         setGuessIndex(guessIndex + 1);
         setGameComplete(true);
         setGameMessage("Say it ain't so...");
+        const wordleScore = getWordleEmoji(
+          activeWord,
+          Object.values(guesses).filter(Boolean)
+        );
+        setWordleEmoji(wordleScore);
       }
     }
 
@@ -113,6 +133,7 @@ export default function GameScreen({ wordBank }: GameScreenProps) {
       setGuessIndex(0);
       setAccuracy({});
       setCorrectGuesses([]);
+      setWordleEmoji("");
     }
   }, [gameComplete]);
 
@@ -192,6 +213,12 @@ export default function GameScreen({ wordBank }: GameScreenProps) {
                   title="Play Again"
                   onPress={() => {
                     setGameComplete(false);
+                  }}
+                />
+                <Button
+                  title="Share"
+                  onPress={() => {
+                    Clipboard.setString(wordleEmoji);
                   }}
                 />
               </View>
