@@ -108,13 +108,17 @@ export default function GameScreen({ dailyWord }: GameScreenProps) {
         setGuessIndex(guessIndex + 1);
       } else {
         setGuessIndex(guessIndex + 1);
-        setGameComplete(true);
         setGameMessage("Say it ain't so...");
         const wordleScore = getWordleEmoji(
           activeWord,
           Object.values(guesses).filter(Boolean)
         );
         setWordleEmoji(wordleScore);
+
+        // Add a delay before setting game complete
+        setTimeout(() => {
+          setGameComplete(true);
+        }, 1000); // 1000 milliseconds = 1 second delay
       }
     }
 
