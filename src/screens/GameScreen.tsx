@@ -49,7 +49,7 @@ export default function GameScreen({ dailyWord }: GameScreenProps) {
         () => {
           setCooldown(false);
         },
-        Platform.OS === "web" ? 600 : 700 // delay messes up shake animation on mobile for some reason
+        Platform.OS === "web" ? 750 : 850 // delay messes up shake animation on mobile for some reason
       );
 
       if (guess.length != 5) {
@@ -90,13 +90,17 @@ export default function GameScreen({ dailyWord }: GameScreenProps) {
 
       if (guess == activeWord) {
         setGuessIndex(guessIndex + 1);
-        setGameComplete(true);
         setGameMessage("Correct!");
         const wordleScore = getWordleEmoji(
           activeWord,
           Object.values(guesses).filter(Boolean)
         );
         setWordleEmoji(wordleScore);
+
+        // Add a delay before setting game complete
+        setTimeout(() => {
+          setGameComplete(true);
+        }, 1000); // 1000 milliseconds = 1 second delay
         return;
       }
 
