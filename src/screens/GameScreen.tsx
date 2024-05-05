@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   Text,
-  Button,
   Platform,
   Modal,
   Clipboard,
@@ -16,6 +15,7 @@ import { IGuess, defaultGuess } from "../types/guessTypes";
 import { wordBank } from "../data/wordBank";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getWordleEmoji } from "../utils/getWordleEmoji";
+import CustomButton from "../components/CustomButton";
 
 interface GameScreenProps {
   dailyWord: string;
@@ -90,7 +90,7 @@ export default function GameScreen({ dailyWord }: GameScreenProps) {
 
       if (guess == activeWord) {
         setGuessIndex(guessIndex + 1);
-        setGameMessage("Correct!");
+        setGameMessage("You Got It!");
         const wordleScore = getWordleEmoji(
           activeWord,
           Object.values(guesses).filter(Boolean)
@@ -241,21 +241,19 @@ export default function GameScreen({ dailyWord }: GameScreenProps) {
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
               <Text style={styles.modalTitle}>{gameMessage}</Text>
-              <Text>
-                <Text style={styles.modalText}>The word was:</Text> {activeWord}
-              </Text>
+              {gameMessage != "You Got It!" && (
+                <Text>
+                  <Text style={styles.modalText}>The word was: </Text>
+                  {activeWord}
+                </Text>
+              )}
               <View style={styles.buttonContainer}>
-                <Button
-                  title="Play Again"
-                  onPress={() => {
-                    setGameComplete(false);
-                  }}
-                />
-                <Button
-                  title="Share"
+                <CustomButton
                   onPress={() => {
                     Clipboard.setString(wordleEmoji);
                   }}
+                  title="Share"
+                  buttonStyle={styles.shareButton}
                 />
               </View>
             </View>
@@ -292,8 +290,15 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: "#008FC4",
-    padding: 70,
+    padding: 30,
     borderRadius: 15,
     alignItems: "center",
+    justifyContent: "center",
+    height: 300,
+    width: 280,
+  },
+  shareButton: {
+    marginTop: 10,
+    backgroundColor: "#4CBB17",
   },
 });
