@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Weezle",
-    "description": "Wordle but with Weezer song titles.",
+    "description": "Wordle but with Weezer song lyrics.",
     "slug": "Weezle",
     "version": "1.0.0",
     "orientation": "portrait",

@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginHorizontal: 2,
     borderRadius: 5,
+    overflow: "hidden",
     fontSize: 18,
     fontFamily: "WeezerFont",
   },
